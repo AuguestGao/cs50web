@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>blah</title>
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            div {
+                background-color: seagreen;
+                width: 500px;
+                height: 400px;
+                padding: 20px;
+                margin: 10px;
+            }
+            #foo {
+                color: gold
+            }
+
+            .baz {
+                color: green
+            }
+        </style>
+        
+    </head>
+    <body>
+        <h1>h1 heading</h1>
+        <h2>h2 heading</h2>
+        <h3>h3 heading</h3>
+        <h4>h4 heading</h4>
+        <h5>h5 heading</h5>
+        <h6>h6 heading</h6>
+
+        An ordered List:
+        <ol style="color: greenyellow"> <!--inline style-->
+            <li>item 1</li>
+            <li>item 2</li>
+            <li>item 3</li>
+            <li>...</li>
+        </ol>
+
+        An un-ordered list:
+        <ul>
+            <li>item a</li>
+            <li>item b</li>
+            <li>item c</li>
+            <li>...</li>
+        </ul>
+        <div> <!--use div for section of the page-->
+            an image:
+            <img src="https://th.bing.com/th/id/OIP.2xtbyxEs4kpIPIo33MotmQHaEo?pid=Api&rs=1" alt="sleepy cat" width="300">
+            
+            link to website or image:
+            <a href="https://www.google.com/">click here</a>
+        </div>
+        table: 
+        <table>
+            <thead> <!--heads of the table-->
+                <tr class="baz">
+                    <th>Ocean</th>
+                    <th>Avg depth</th>
+                    <th>Max depth</th>
+                </tr>
+            </thead>
+            <tbody> <!--table body-->
+                <tr id="foo"> <!-- table row-->
+                    <td>Pacific</td><!--table data, i.e. cell-->
+                    <td>4,280m</td>
+                    <td>10,911m</td>
+                </tr>
+                <tr>
+                    <td>Atlantic</td>
+                    <td>3,646m</td>
+                    <td>8,486m</td>                   
+                </tr>
+            </tbody>
+        </table>
+        
+        form: 
+        <form>
+            <input type="text" placeholder="first name last name" name="full_name">
+            <input type="password" placeholder="Password" name="password"> <!--html will not show characters when type="password-->
+            <input name="car" list="models" placehodler='choose model'>
+            <datalist id="models">
+                <option value="WRX">
+                <option value="WRX STI">
+                <option value="Impreza">
+                <option value="Outback">
+                <option value="Legacy">
+                <option value="BRZ">
+                <option value="Ascent">
+                <option value="Forester">
+                <option value="Crosstrek">
+            </datalist>
+                
+            <input type="submit">
+        </form>
+
+    </body>
+</html>

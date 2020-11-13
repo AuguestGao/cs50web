@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <title>Hello!</title>
+        <link rel="stylesheet" href="variables.css">
+        <style>
+            @media (min-width: 600px) {
+                body {
+                    background-color: rosybrown;
+                }
+            }
+
+            @media (max-width: 599px){
+                body {
+                    background-color: silver;
+                }
+            }
+
+            #container {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            #container > div {
+                background-color: springgreen;
+                margin: 20px;
+                padding: 15px;
+                width: 200px;
+                font-size: 20px;
+                color: black;
+            }
+
+            #grid {
+                background-color: black;
+                display: grid;
+                padding: 20px;
+                grid-column-gap: 20px;
+                grid-row-gap: 10px;
+                grid-template-columns: 200px 200px auto;
+            }
+
+            .grid-item {
+                background-color:silver;
+                font-size: 20px;
+                color: darkblue;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div> 1.This is some sample test inside of a div to demo Flexbox</div>
+            <div> 2.This is some sample test inside of a div to demo Flexbox</div>
+            <div> 3.This is some sample test inside of a div to demo Flexbox</div>
+            <div> 4.This is some sample test inside of a div to demo Flexbox</div>
+            <div> 5.This is some sample test inside of a div to demo Flexbox</div>
+            <div> 6.This is some sample test inside of a div to demo Flexbox</div>
+        </div>
+
+        <div id="grid">
+            <div class="grid-item">1</div>
+            <div class="grid-item">2</div>
+            <div class="grid-item">3</div>
+            <div class="grid-item">4</div>
+            <div class="grid-item">5</div>
+            <div class="grid-item">6</div>
+            <div class="grid-item">7</div>
+            <div class="grid-item">8</div>
+            <div class="grid-item">9</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">12</div>
+            <div class="grid-item">13</div>
+            <div class="grid-item">14</div>
+            <div class="grid-item">15</div>
+        </div>
+
+        <div>
+            <ol>
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3</li>
+            </ol>
+            <ul>
+                <li>item a</li>
+                <li>item b</li>
+                <li>item c</li>
+            </ul>
+        </div>
+    </body>
+</html>
