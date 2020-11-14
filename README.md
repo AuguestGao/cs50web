@@ -1,2 +1,2 @@
 # cs50web
-Harvard CS50 WEB 2020F Course
+Harvard CS50 Web 2020W Course
