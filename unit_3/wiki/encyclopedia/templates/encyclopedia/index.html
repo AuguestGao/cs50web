@@ -4,6 +4,10 @@
     Encyclopedia
 {% endblock %}
 
+{% block title %}
+<title>{{ entry }} - Wiki</title>
+{% endblock %}
+
 {% block body %}
     <h1>All Pages</h1>
 
@@ -11,7 +15,6 @@
         {% for entry in entries %}
             <li><a href="encyclopedia:wiki/entry">{{ entry }}</a></li>
         {% endfor %}
-
     </ul>
 
 {% endblock %}
