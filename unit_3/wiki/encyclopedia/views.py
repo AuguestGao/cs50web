@@ -19,6 +19,9 @@ def entry(request, title):
         #use markdown2 to convert .md to .html
         entry_html = markdown2.markdown(entry_md)
         return render(request, "encyclopedia/entry.html", {
-            "entry_html": entry_html
+            "entry_html": entry_html,
+            "title": title
         })
-    return HttpResponse("404 No such an entry found")
+    return render(request, "encyclopedia/error.html", {
+            "title": title
+        })
