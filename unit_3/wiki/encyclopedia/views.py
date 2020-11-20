@@ -4,6 +4,7 @@ from django.urls import reverse
 from django import forms
 
 from . import util
+import random
 
 import markdown2
 
@@ -70,3 +71,10 @@ def new(request): # new has request.method get and post
     return render(request, "encyclopedia/new.html", {
         "form": NewPageForm() # empty form
     })
+
+
+def randompage(request):
+    choices = util.list_entries()
+    choice = random.choice(choices)
+    return HttpResponseRedirect(reverse("encyclopedia:entry", kwargs={
+        "entry": choice}))
