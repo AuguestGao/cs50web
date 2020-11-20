@@ -1,16 +1,15 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    Encyclopedia
+    Encyclopedia | New
 {% endblock %}
 
 {% block body %}
-    <h1>All Pages</h1>
-
-    <ul>
-        {% for entry in entries %}
-            <a href="{% url 'wiki:entry' %}">entry</a>
-        {% endfor %}
-    </ul>
-
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <br>
+    <input type="submit" value="Submit" class="btn btn-primary form-control col-lg-1">
+</form>
+    
 {% endblock %}

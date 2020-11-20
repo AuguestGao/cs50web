@@ -1,9 +1,14 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    ERROR!
+    ERROR
 {% endblock %}
 
 {% block body %}
-    <h1>page {{ title }} not found</h1>
+<div class="dumbotron">
+    <h1 class="display-4"> ERROR </h1>
+    <p class="lead"> {{ msg }} </p>
+    <hr class='my-4'>
+    <p>Use NAV to redirect</p>
+</div>
 {% endblock %}
