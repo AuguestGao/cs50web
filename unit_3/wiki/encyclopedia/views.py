@@ -10,22 +10,23 @@ import markdown2
 
 
 class NewPageForm(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(
+    entry = forms.CharField(widget=forms.TextInput(
         attrs={
             'label':'Title',
             'class':'form-control col-lg-6',
-            'name':'title'
-        }))
+            'name':'title'}))
     content = forms.CharField(widget=forms.Textarea(
         attrs={
             'class':'form-control col-lg-6',
             'name':'content'
-        }))
-    
+            }))
+
+
 def index(request):
     return render(request, "encyclopedia/index.html", {
             "entries": util.list_entries()
     })
+
 
 def wiki(request, entry):
     entry_md = util.get_entry(entry)
@@ -42,26 +43,28 @@ def wiki(request, entry):
             "msg": massage
         })
 
+
 # search only redirects, to wiki, and wiki does the rendering
 def search(request):
     entry = request.GET.get('entry', '')
     return HttpResponseRedirect(reverse("encyclopedia:entry", kwargs={"entry": entry}))
 
+
 def new(request): # new has request.method get and post
     if request.method == "POST":
         form = NewPageForm(request.POST) # get user's submit to form
         if form.is_valid():
-            title = form.cleaned_data["title"]
+            entry = form.cleaned_data["entry"]
             content = form.cleaned_data["content"]
 
-            if title in util.list_entries():
-                massage = 'Title ' + title + " exists"
+            if entry in util.list_entries():
+                massage = 'Entry ' + entry
                 return render(request, "encyclopedia/error.html", {
                     "msg":massage
                 })
             else:
-                util.save_entry(title, content)
-                return HttpResponseRedirect(reverse("encyclopedia:entry", kwargs={'entry': title}))
+                util.save_entry(entry, content)
+                return HttpResponseRedirect(reverse("encyclopedia:entry", kwargs={'entry': entry}))
 
         else:
             return render(request, "encyclopedia/new.html", {
@@ -69,8 +72,7 @@ def new(request): # new has request.method get and post
             })
     # if request.method == "GET"
     return render(request, "encyclopedia/new.html", {
-        "form": NewPageForm() # empty form
-    })
+        "form": NewPageForm()})# empty form
 
 
 def randompage(request):
@@ -78,3 +80,24 @@ def randompage(request):
     choice = random.choice(choices)
     return HttpResponseRedirect(reverse("encyclopedia:entry", kwargs={
         "entry": choice}))
+
+
+def edit(request, entry):
+    if request.method == "GET":
+        content = markdown2.markdown(util.get_entry(entry))
+        form = NewPageForm(initial={
+        "entry": entry,
+        "content":content})
+        return render(request, "encyclopedia/edit.html", {
+                "form": form,
+                "entry": entry})
+    else:
+        form = NewPageForm(request.POST)
+        if form.is_valid():
+            entry = form.cleaned_data["entry"]
+            content = form.cleaned_data["content"]
+            util.save_entry(entry, content)
+            return HttpResponseRedirect(reverse("encyclopedia:entry", kwargs={'entry': entry}))        
+        else:
+            return render(request, "encyclopedia/new.html", {
+                "form": form})            

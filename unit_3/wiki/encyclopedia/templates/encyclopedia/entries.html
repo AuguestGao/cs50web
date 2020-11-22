@@ -6,4 +6,8 @@
 
 {% block body %}
     {{ entry_html }}
+    <br>
+    <form action="{% url 'encyclopedia:edit' entry %}">
+        <input type="submit" value='Edit' class='btn btn-primary col-md-2'>
+    </form>
 {% endblock %}
