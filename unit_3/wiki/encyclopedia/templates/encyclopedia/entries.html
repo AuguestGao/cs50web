@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    {{ entry_html }}
+    <div>
+        {{ entry_html | safe }}
+    </div>
     <br>
     <form action="{% url 'encyclopedia:edit' entry %}">
         <input type="submit" value='Edit' class='btn btn-primary col-md-2'>

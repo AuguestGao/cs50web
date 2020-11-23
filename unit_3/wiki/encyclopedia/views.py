@@ -4,7 +4,7 @@ from django.urls import reverse
 from django import forms
 
 from . import util
-import random
+import random, re
 
 import markdown2
 
@@ -84,7 +84,7 @@ def randompage(request):
 
 def edit(request, entry):
     if request.method == "GET":
-        content = markdown2.markdown(util.get_entry(entry))
+        content = util.get_entry(entry)
         form = NewPageForm(initial={
         "entry": entry,
         "content":content})
