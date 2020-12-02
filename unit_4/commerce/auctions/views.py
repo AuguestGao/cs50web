@@ -4,16 +4,19 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import *
+import datetime
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    items = Listing.objects.all().filter(avail=1)
+    return render(request, "auctions/index.html", {
+        'items': items
+    })
 
 
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -61,3 +64,32 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def new(request):
+    if request.method == "POST":
+        print("post is successful")
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        bid = float(request.POST.get('bid'))
+        try:
+            url = request.POST.get('url')
+        except ValueError:
+            url = "https://cdn4.iconfinder.com/data/icons/toolbar-std-pack/512/delete-256.png"
+        #category
+        avail = False
+        owner = User.objects.get(pk=int(request.user.id))
+        instance = Listing(title=title, description=description, bid=bid, url=url,\
+             create_time=datetime.datetime.now(), avail=1, owner=owner)
+        instance.save()
+        return HttpResponseRedirect(reverse('index'))
+    else:
+        cate = Category.objects.all()
+        return render(request, "auctions/new.html", {
+            "categories": cate
+        })
+
+def category(request):
+    pass
+
+def watchlist(request):
+    pass

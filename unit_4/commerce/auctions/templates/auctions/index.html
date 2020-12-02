@@ -3,5 +3,21 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    {% for item in items %}
+
+    <div class="card mb-3" style="max-width: 720px;">
+        <div class="row no-gutters">
+          <div class="col-sm-4">
+            <img src="{{ item.url }}" class="card-img" alt="Image of {{ item.title }}">
+          </div>
+          <div class="col-sm-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <p class="card-text">{{ item.description }}</p>
+              <p class="card-text"><small class="text-muted">Created {{ item.create_time}}</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
 {% endblock %}
