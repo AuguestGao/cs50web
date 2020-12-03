@@ -93,3 +93,8 @@ def category(request):
 
 def watchlist(request):
     pass
+
+def listing(request, title):
+    return render(request, "auctions/item.html", {
+        'title': title
+    })
