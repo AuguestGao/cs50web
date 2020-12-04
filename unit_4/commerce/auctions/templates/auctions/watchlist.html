@@ -2,9 +2,9 @@
 
 {% block body %}
 
-<h2>{{ user.username }}'s Watchlist</h2>
+<h2>Watchlist</h2>
 
-{% for item in lists %}
+{% for item in list %}
 <div class="card mb-3" style="max-width: 720px;">
     <div class="row no-gutters">
       <div class="col-sm-4">
@@ -19,5 +19,8 @@
       </div>
     </div>
   </div>
+{% empty %}
+  <p>Your watchlist is empty.</p>
 {% endfor %}
+
 {% endblock %}

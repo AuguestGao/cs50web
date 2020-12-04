@@ -92,27 +92,38 @@ def category(request):
     pass
 
 def watchlist(request):
-
     if request.method == "POST":
-        whosewatch = Wathchlist.objects.get(who = request.user.id)
-        watchitem = Listing.objects.get(pk=request.POST.get('item_id'))
-        if int(request.POST.get('already')): #already == 1
-            whosewatch.item.delete(watchitem)
+        who = User.objects.get(pk=request.user.id)
+        item = Listing.objects.get(pk=int(request.POST.get('item_id')))
+        # print(who, item)
+        # a = request.POST.get('already')
+        # print(a, type(int(a)))
+
+        try:
+            f=request.POST.get('found')
+            print('f = ', f)
+            request.POST.get('found')
+        except TypeError:
+            print('nothing')
+            watchaction = Watchlist.objects.create(who=who, item=item)
+            watchaction.save()
         else:
-            whosewatch.item.add(watchitem)
-    watched_items = Watchlist.objects.filter(who = request.user.id)
-    present_list = Listing.objects.filter(pk__in= watched_items)
+            print('find match')
+            watchaction = Watchlist.objects.all().filter(who=who, item=item)
+            watchaction.delete()
+    else:
+        pass
+    watched_items = list(Watchlist.objects.all().filter(who = who))
+    print(watched_items, type(watched_items))
+    show_list = Listing.objects.filter(pk__in= watched_items)
     return render(request, "auctions/watchlist.html", {
-        'lists': present_list
+        'list': show_list
     })
 
 
 def item(request, id):
-    item = Listing.objects.get(id = id)
-    try:
-        exist = Watchlist.objects.filter(who=request.user.id).filter(item=id).count()
-    except NoneTypeError:
-        exist = 0
+    item = Listing.objects.get(pk = id)
+    exist = Watchlist.objects.filter(who=request.user.id, item=item.id).count()
     return render(request, "auctions/item.html", {
         'item': item,
         'exist': exist

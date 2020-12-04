@@ -23,9 +23,9 @@
             {% csrf_token %}
             <input type='hidden' name='item_id' value="{{ item.id }}">
             {% if exist %}
-                <button type="submit" name="already" value="0" id="wishyet">Remove from Wishlist</button>
+                <button type="submit" name="found" value="1" id="wishyet" class="btn btn-danger">Remove from Watchlist</button>
             {% else %}
-                <button type="submit" name="already" value="1" id="wishyet">Add to Wishlist</button>
+                <button type="submit" name="found" value="0" id="wishyet" class="btn btn-primary">Add to Watchlist</button>
             {% endif %}    
             </form>
     </div>
