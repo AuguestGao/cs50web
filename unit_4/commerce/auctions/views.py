@@ -92,17 +92,28 @@ def category(request):
     pass
 
 def watchlist(request):
-    msg = str(request.POST.get('item_title'))
-    print(type(msg))
-    if request.POST.get('already') == '0':
-        msg = msg + "** will be remored"
-    else:
-        msg = msg + "** will be added"
-    return render(request, "auctions/watchlist.html", {'msg':msg})
+
+    if request.method == "POST":
+        whosewatch = Wathchlist.objects.get(who = request.user.id)
+        watchitem = Listing.objects.get(pk=request.POST.get('item_id'))
+        if int(request.POST.get('already')): #already == 1
+            whosewatch.item.delete(watchitem)
+        else:
+            whosewatch.item.add(watchitem)
+    watched_items = Watchlist.objects.filter(who = request.user.id)
+    present_list = Listing.objects.filter(pk__in= watched_items)
+    return render(request, "auctions/watchlist.html", {
+        'lists': present_list
+    })
+
 
 def item(request, id):
     item = Listing.objects.get(id = id)
+    try:
+        exist = Watchlist.objects.filter(who=request.user.id).filter(item=id).count()
+    except NoneTypeError:
+        exist = 0
     return render(request, "auctions/item.html", {
         'item': item,
-        'exist': 1
+        'exist': exist
     })
