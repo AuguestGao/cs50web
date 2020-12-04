@@ -11,9 +11,9 @@
           </div>
           <div class="col-sm-8">
             <div class="card-body">
-              <a href="{% url 'listing' item.title %}" class="card-title">{{ item.title }}</a>>
+              <a href="{% url 'listing' item.id %}" class="card-title">{{ item.title }}</a>>
               <p class="card-text">{{ item.description }}</p>
-              <p class="card-text"><small class="text-muted">Created {{ item.create_time}}</small></p>
+              <p class="card-text"><small class="text-muted">Created {{ item.create_time }}</small></p>
             </div>
           </div>
         </div>

@@ -94,7 +94,8 @@ def category(request):
 def watchlist(request):
     pass
 
-def listing(request, title):
+def item(request, id):
+    item = Listing.objects.get(id = id)
     return render(request, "auctions/item.html", {
-        'title': title
+        'item': item
     })

@@ -1,5 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h1>{{ title }} is listed</h1>
+    <div>
+        <h2>{{ item.title }} is listed</h2>
+        <!-- <h3>Price: <strong>${{ item.price }}</strong></h3> -->
+        <br>
+        <img src="{{ item.url }}" class="card-img" alt="Image of {{ item.title }}">
+        <br>
+        <p>{{ item.description }}</p>
+        <ul>
+            <li>Owner: {{ item.owner }}</li>
+            {% if item.category %}
+                <li>Catgegory: {{ item.category }}</li>
+            {% else %}
+                <li>Category: No cagetory listed</li>
+            {% endif %}
+            <li>Created: {{ item.create_time }}</li>
+        </ul>
+    </div>
 {% endblock %}
