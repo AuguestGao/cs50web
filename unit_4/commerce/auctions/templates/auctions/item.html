@@ -18,4 +18,15 @@
             <li>Created: {{ item.create_time }}</li>
         </ul>
     </div>
+    <div>
+        <form action="{% url 'watchlist'%}" method="POST" for="wishyet">
+            {% csrf_token %}
+            <input type='hidden' name='item_title' value="{{ item.title }}">
+            {% if exist %}
+                <button type="submit" name="already" value="0" id="wishyet">Remove from Wishlist</button>
+            {% else %}
+                <button type="submit" name="already" value="1" id="wishyet">Add to Wishlist</button>
+            {% endif %}    
+            </form>
+    </div>
 {% endblock %}

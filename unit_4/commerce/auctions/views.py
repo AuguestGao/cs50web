@@ -92,10 +92,17 @@ def category(request):
     pass
 
 def watchlist(request):
-    pass
+    msg = str(request.POST.get('item_title'))
+    print(type(msg))
+    if request.POST.get('already') == '0':
+        msg = msg + "** will be remored"
+    else:
+        msg = msg + "** will be added"
+    return render(request, "auctions/watchlist.html", {'msg':msg})
 
 def item(request, id):
     item = Listing.objects.get(id = id)
     return render(request, "auctions/item.html", {
-        'item': item
+        'item': item,
+        'exist': 1
     })
