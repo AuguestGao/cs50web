@@ -19,7 +19,7 @@
         </ul>
     </div>
     <div>
-        <form action="{% url 'watchlist'%}" method="POST" for="wishyet">
+        <form action="{% url 'watchlist' %}" method="POST" for="wishyet">
             {% csrf_token %}
             <input type='hidden' name='item_id' value="{{ item.id }}">
             {% if exist %}

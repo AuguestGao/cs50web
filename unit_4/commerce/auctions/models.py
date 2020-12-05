@@ -29,5 +29,5 @@ class Watchlist(models.Model):
     who = models.ForeignKey(User, related_name="whosewatch", on_delete=models.CASCADE)
     item = models.ManyToManyField(Listing, related_name="watchitem")
 
-    def __str__(self):
-        return f"{{ who }} watches {{ item }}"
+    # def __str__(self):
+    #     return f"{who.username} watches {item.title}"

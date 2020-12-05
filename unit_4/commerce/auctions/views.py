@@ -92,34 +92,43 @@ def category(request):
     pass
 
 def watchlist(request):
+    # if request.user.is_authenticated():
+    #     msg = True
+    #     return HttpResponseRedirect(reverse("index", args=(msg,)))
+    user_id = int(request.user.id)
     if request.method == "POST":
-        who = User.objects.get(pk=request.user.id)
-        item = Listing.objects.get(pk=int(request.POST.get('item_id')))
+        watch_who = User.objects.get(pk=user_id)
+        watch_item = Listing.objects.get(pk=int(request.POST.get('item_id')))
         # print(who, item)
-        # a = request.POST.get('already')
+        # a = request.POST.get('found')
         # print(a, type(int(a)))
 
-        try:
-            f=request.POST.get('found')
-            print('f = ', f)
-            request.POST.get('found')
-        except TypeError:
-            print('nothing')
-            watchaction = Watchlist.objects.create(who=who, item=item)
-            watchaction.save()
-        else:
-            print('find match')
-            watchaction = Watchlist.objects.all().filter(who=who, item=item)
+        if int(request.POST.get('found')):
+            watchaction = Watchlist.objects.all().filter(who=watch_who, item=watch_item)
             watchaction.delete()
+        else:
+            watchaction = Watchlist(who=watch_who)
+            watchaction.watchitem = watch_item
+            watchaction.save()
+        
+        # try:
+        #     f=request.POST.get('found')
+        #     print('f = ', f)
+        #     request.POST.get('found')
+        # except TypeError:
+        #     print('nothing')
+        #     watchaction = Watchlist.objects.create(who, item)
+        #     watchaction.save()
+        # else:
+        #     print('find match')
+        #     watchaction = Watchlist.objects.all().filter(who=who, item=item)
+        #     watchaction.delete()
     else:
         pass
-    watched_items = list(Watchlist.objects.all().filter(who = who))
-    print(watched_items, type(watched_items))
-    show_list = Listing.objects.filter(pk__in= watched_items)
-    return render(request, "auctions/watchlist.html", {
+    show_list = list(Watchlist.objects.all().filter(who = user_id).values('item'))
+    return render(request, reverse("watchlist"), {
         'list': show_list
     })
-
 
 def item(request, id):
     item = Listing.objects.get(pk = id)
