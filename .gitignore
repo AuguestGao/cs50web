@@ -1,0 +1,9 @@
+
+*.pyc
+__pycache__/
+unit_4/commerce/auctions/__pycache__/models.cpython-39.pyc
+unit_4/commerce/auctions/__pycache__/views.cpython-39.pyc
+.pytest_cache/
+.vscode/
+.git
+.idea
