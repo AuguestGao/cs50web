@@ -88,12 +88,22 @@ def new(request):
             "categories": cate
         })
 
-def category(request):
-    pass
+def cate_index(request):
+    types = list(Category.objects.all())
+    return render(request, "auctions/cate_index.html", {
+        'types': types 
+    })
+
+def cate_name(request, name):
+    cate_id = Category.objects.get(name=name)
+    items = list(Listing.objects.filter(category = cate_id))
+    return render(request, "auctions/cate_name.html", {
+        "items": items,
+        "name": name
+    })
 
 def watchlist(request):
- 
-    # user must login to see this page, so this step ensures the user existed and logged in already
+     # user must login to see this page, so this step ensures the user existed and logged in already
     watch_who = User.objects.get(pk=request.user.id)
     
     if request.method == "POST":
