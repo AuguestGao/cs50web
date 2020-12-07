@@ -92,34 +92,25 @@ def category(request):
     pass
 
 def watchlist(request):
-    # watchlist won't be shown if a user doesn't login
-    
-    # watches = list(Listing.objects.filter(pk__in = iis))
-    # return render(request, 'auctions/watchlist.html', {
-    #     'items': i,
-    # })
-
+ 
+    # user must login to see this page, so this step ensures the user existed and logged in already
     watch_who = User.objects.get(pk=request.user.id)
+    
     if request.method == "POST":
         watch_item = Listing.objects.get(pk=int(request.POST.get('item_id')))
-        # print(who, item)
-        # a = request.POST.get('found')
-        # print(a, type(int(a)))
 
         if int(request.POST.get('found')):
             instance = Watchlist.objects.get(who=watch_who, item=watch_item)
             instance.delete()
         else:
-            instance = Watchlist.objects.get(who=watch_who)
+            instance = Watchlist(who = watch_who) #create an Watchlist object
+            instance.save() # save instance first and then relate to the Listing object
             instance.item.add(watch_item)
 
-    # print('i reach here')
-    show_list = list(Watchlist.objects.filter(who=watch_who))
-    # for i in show_list:
-    #     print(i, type(i))
-
+    watched_items = list(Watchlist.objects.filter(who=watch_who).values_list('item', flat=True)) #use values_list with flat to get the item.id only instead of a dictionary 
+    items = Listing.objects.filter(pk__in= watched_items) #get listing objects by index, pk__in takes id in int format
     return render(request, "auctions/watchlist.html", {
-        'list': show_list
+        "items": items,
     })
 
 def item(request, id):
