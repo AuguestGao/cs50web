@@ -92,44 +92,35 @@ def category(request):
     pass
 
 def watchlist(request):
-    # if request.user.is_authenticated():
-    #     msg = True
-    #     return HttpResponseRedirect(reverse("index", args=(msg,)))
-    user = None
-    if request.user.is_authenticated:
-        user = User.objects.get(pk=request.user.id)
-        i = Listing.objects.get(pk = '2')
-        test=[i]
-        return render(request, 'auctions/watchlist.html', {
-            'items': test,
-        })
-    else:
-        return HttpResponseRedirect(reverse('login'))
-    #watch_who = User.objects.get(pk=request.user.id)
-    # if request.method == "POST":
-    #     watch_item = Listing.objects.get(pk=int(request.POST.get('item_id')))
-    #     # print(who, item)
-    #     # a = request.POST.get('found')
-    #     # print(a, type(int(a)))
+    # watchlist won't be shown if a user doesn't login
+    
+    # watches = list(Listing.objects.filter(pk__in = iis))
+    # return render(request, 'auctions/watchlist.html', {
+    #     'items': i,
+    # })
 
-    #     if int(request.POST.get('found')):
-    #         watchaction = Watchlist.objects.all().filter(who=watch_who, item=watch_item)
-    #         watchaction.delete()
-    #     else:
-    #         watchaction = Watchlist(who=watch_who)
-    #         watchaction.watchitem = watch_item
-    #         watchaction.save()
+    watch_who = User.objects.get(pk=request.user.id)
+    if request.method == "POST":
+        watch_item = Listing.objects.get(pk=int(request.POST.get('item_id')))
+        # print(who, item)
+        # a = request.POST.get('found')
+        # print(a, type(int(a)))
 
-    # else:
-    #     pass
+        if int(request.POST.get('found')):
+            instance = Watchlist.objects.get(who=watch_who, item=watch_item)
+            instance.delete()
+        else:
+            instance = Watchlist.objects.get(who=watch_who)
+            instance.item.add(watch_item)
+
     # print('i reach here')
-    # show_list = list(Watchlist.objects.all().filter(who = watch_who).values('item'))
+    show_list = list(Watchlist.objects.filter(who=watch_who))
     # for i in show_list:
     #     print(i, type(i))
 
-    # return render(request, "auctions/watchlist.html", {
-    #     'list': show_list
-    # })
+    return render(request, "auctions/watchlist.html", {
+        'list': show_list
+    })
 
 def item(request, id):
     item = Listing.objects.get(pk = id)
