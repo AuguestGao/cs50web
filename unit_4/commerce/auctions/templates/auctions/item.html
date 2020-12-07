@@ -27,6 +27,30 @@
             {% else %}
                 <button type="submit" name="found" value="0" id="wishyet" class="btn btn-primary">Add to Watchlist</button>
             {% endif %}    
-            </form>
+        </form>
+        <br>
+        <form action="{% url 'listing' item.id %}" method="POST" for='cmt'>
+            {% csrf_token %}
+            <label for="cmt" class="form-label">Post your comment</label>
+            <textarea class="form-control" id="cmt" name='detail' rows="3" placeholder='Enter your comment...'></textarea>
+            <button type='submit' class="btn btn-secondary" id='cmt'>Comment</button>
+        </form>
     </div>
+    
+    <div>
+        <br>
+        {% for comment in comments %}
+        <div class="card">
+            <div class="card-header">
+              {{ comment.user.username }} wrote on {{ comment.time }}
+            </div>
+            <div class="card-body">
+              <p class="card-text">{{ comment.detail }}</p>
+            </div>
+          </div>
+        {% empty %}
+        <p>Be the first one to comment.</p>
+        {% endfor %}
+    </div>
+
 {% endblock %}

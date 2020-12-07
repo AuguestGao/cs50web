@@ -125,8 +125,19 @@ def watchlist(request):
 
 def item(request, id):
     item = Listing.objects.get(pk = id)
+    user = User.objects.get(pk=request.user.id)
     exist = Watchlist.objects.filter(who=request.user.id, item=item.id).count()
+
+    #save comment into db
+    if request.method == 'POST':
+        detail = request.POST.get('detail')
+        instance = Comment(item = item, user=user, detail=detail, time=datetime.datetime.now())
+        instance.save()
+
+    comments = list(Comment.objects.filter(item=item))
+
     return render(request, "auctions/item.html", {
         'item': item,
-        'exist': exist
+        'exist': exist,
+        'comments': comments
     })
