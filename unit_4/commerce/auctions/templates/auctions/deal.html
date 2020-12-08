@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class="alert alert-success" role="alert">
+        <h2>{{ message }}</h2>
+        <a href="{% url 'index' %}">Back to index</a>
+    </div>
+
+    <div>
+        <h2>{{ item.title }}</h2>
+        <p>Price: <strong>${{ price }}</strong></p>
+        <br>
+        <img src="{{ item.url }}" class="card-img" alt="Image of {{ item.title }}">
+        <br>
+        <p>{{ item.description }}</p>
+        <ul>
+            <li>Owner: {{ item.owner }}</li>
+            {% if item.category %}
+                <li>Catgegory: {{ item.category }}</li>
+            {% else %}
+                <li>Category: No cagetory listed</li>
+            {% endif %}
+            <li>Created: {{ item.create_time }}</li>
+        </ul>
+    </div>
+
+{% endblock %}

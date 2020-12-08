@@ -18,7 +18,7 @@ class Listing(models.Model):
     url = models.URLField(blank=True, max_length = 255)
     category = models.ForeignKey(Category, null=True, related_name="item", on_delete=models.SET_NULL)
     create_time = models.DateTimeField()
-    avail = models.BooleanField(default=True)
+    avail = models.SmallIntegerField(default=1)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
 
     def __str__(self):

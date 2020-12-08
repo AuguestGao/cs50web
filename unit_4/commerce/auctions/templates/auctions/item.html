@@ -32,16 +32,21 @@
 
         <form action="{% url 'listing' item.id %}" method="POST" for='bid'>
             {% csrf_token %}
-            <div class="form-group">
-                <label for="bid">Enter your bid</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">$</div>
+
+            {% if owner %}
+                <button type="submit" class="btn btn-danger" name='close' value="True">Close bidding</button>
+            {% else %}
+                <div class="form-group">
+                    <label for="bid">Enter your bid</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">$</div>
+                        </div>
+                        <input class='form-control' type="number" name="bid" id="bid" min="{{ price }}" step="0.01" placeholder="Must be higher than current price">
+                        <button type="submit" class="btn btn-primary">Bid</button>
                     </div>
-                    <input class='form-control' type="number" name="bid" id="bid" min="{{ price }}" step="0.01" placeholder="Must be higher than current price">
-                    <button type="submit" class="btn btn-primary">Bid</button>
                 </div>
-            </div>
+            {% endif %}
 
         </form>
 

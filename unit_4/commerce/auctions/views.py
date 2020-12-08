@@ -9,7 +9,27 @@ import datetime
 
 
 def index(request):
-    # items = Listing.objects.all().filter(avail=1)
+    # current_winner = Bid.objects.filter(item=item).latest().user
+
+    try:
+        user=User.objects.get(pk=request.user.id)
+    except User.DoesNotExist:
+        pass
+    else:
+        # check if this user has a wining bid
+        closing_items = list(Listing.objects.filter(avail=2))
+        for item in closing_items:
+            win = Bid.objects.filter(item=item).latest()
+            if user.id == win.user.id:
+                item.avail = 0
+                item.save()
+                message = "Congratulations! You have won " + str(item.title)
+                return render(request, "auctions/deal.html", {
+                    'item': item,
+                    'message': message,
+                    'price': win.price
+                })
+
     key = "index"
     items = make_list(key)
     return render(request, "auctions/index.html", {
@@ -154,6 +174,18 @@ def item(request, id):
             message = "Please login"
             return HttpResponseRedirect(reverse("login", args=(message,)))
 
+        if request.POST.get('close'):
+            item.avail = 2
+            item.save()
+            current_price = Bid.objects.filter(item=item).latest().price
+            message = str(item.title) + " is now closed."
+            print(message)
+            return render(request, "auctions/deal.html", {
+                'message': message,
+                'item': item,
+                'price': current_price
+            })
+
         # check if it's a comment
         if request.POST.get('detail'):
             detail = request.POST.get('detail')
@@ -173,7 +205,8 @@ def item(request, id):
         'item': item,
         'exist': exist,
         'comments': comments,
-        'price': current_price
+        'price': current_price,
+        'owner': item.owner.id == user.id
     })
 
 def make_list(key, cate_id=0, user=None):
