@@ -15,7 +15,6 @@ class Category(models.Model):
 class Listing(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(blank=True, max_length=1000)
-    #bid = models.DecimalField(max_digits=20, decimal_places=2)
     url = models.URLField(blank=True, max_length = 255)
     category = models.ForeignKey(Category, null=True, related_name="item", on_delete=models.SET_NULL)
     create_time = models.DateTimeField()
@@ -32,11 +31,21 @@ class Watchlist(models.Model):
     # def __str__(self):
     #     return f"{who.username} watches {item.title}"
 
+
 class Comment(models.Model):
-    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
     detail = models.TextField(max_length=1000)
     time = models.DateTimeField()
 
     class Meta:
         ordering=['-time'] #order by time 
+
+class Bid(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=20, decimal_places=2)
+    time = models.DateTimeField()
+
+    class Meta:
+        get_latest_by = 'price'

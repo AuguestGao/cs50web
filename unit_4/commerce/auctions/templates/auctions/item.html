@@ -2,8 +2,8 @@
 
 {% block body %}
     <div>
-        <h2>{{ item.title }} is listed</h2>
-        <!-- <h3>Price: <strong>${{ item.price }}</strong></h3> -->
+        <h2>{{ item.title }}</h2>
+        <p>Price: <strong>${{ price }}</strong></p>
         <br>
         <img src="{{ item.url }}" class="card-img" alt="Image of {{ item.title }}">
         <br>
@@ -28,6 +28,23 @@
                 <button type="submit" name="found" value="0" id="wishyet" class="btn btn-primary">Add to Watchlist</button>
             {% endif %}    
         </form>
+        <br>
+
+        <form action="{% url 'listing' item.id %}" method="POST" for='bid'>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="bid">Enter your bid</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">$</div>
+                    </div>
+                    <input class='form-control' type="number" name="bid" id="bid" min="{{ price }}" step="0.01" placeholder="Must be higher than current price">
+                    <button type="submit" class="btn btn-primary">Bid</button>
+                </div>
+            </div>
+
+        </form>
+
         <br>
         <form action="{% url 'listing' item.id %}" method="POST" for='cmt'>
             {% csrf_token %}

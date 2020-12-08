@@ -9,7 +9,9 @@ import datetime
 
 
 def index(request):
-    items = Listing.objects.all().filter(avail=1)
+    # items = Listing.objects.all().filter(avail=1)
+    key = "index"
+    items = make_list(key)
     return render(request, "auctions/index.html", {
         'items': items
     })
@@ -51,7 +53,6 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
-
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
@@ -67,20 +68,22 @@ def register(request):
 
 def new(request):
     if request.method == "POST":
-        print("post is successful")
         title = request.POST.get('title')
         description = request.POST.get('description')
         bid = float(request.POST.get('bid'))
+        now = datetime.datetime.now()
         try:
             url = request.POST.get('url')
         except ValueError:
             url = "https://cdn4.iconfinder.com/data/icons/toolbar-std-pack/512/delete-256.png"
-        #category
+        
         avail = False
         owner = User.objects.get(pk=int(request.user.id))
-        instance = Listing(title=title, description=description, bid=bid, url=url,\
-             create_time=datetime.datetime.now(), avail=1, owner=owner)
-        instance.save()
+        lst_instance = Listing(title=title, description=description, url=url,\
+             create_time=now, avail=1, owner=owner)
+        lst_instance.save()
+        bid_instance = Bid(user = owner, item = lst_instance, price=bid, time=now)
+        bid_instance.save()
         return HttpResponseRedirect(reverse('index'))
     else:
         cate = Category.objects.all()
@@ -96,7 +99,10 @@ def cate_index(request):
 
 def cate_name(request, name):
     cate_id = Category.objects.get(name=name)
-    items = list(Listing.objects.filter(category = cate_id))
+    # items = list(Listing.objects.filter(category = cate_id))
+    key = "cate"
+    items = make_list(key, cate_id=cate_id)
+
     return render(request, "auctions/cate_name.html", {
         "items": items,
         "name": name
@@ -104,40 +110,99 @@ def cate_name(request, name):
 
 def watchlist(request):
      # user must login to see this page, so this step ensures the user existed and logged in already
-    watch_who = User.objects.get(pk=request.user.id)
+    try:
+        user = User.objects.get(pk=request.user.id)
+    except User.DoesNotExist:
+        message = "Please login"
+        return HttpResponseRedirect(reverse("login", args=(message,)))
     
     if request.method == "POST":
-        watch_item = Listing.objects.get(pk=int(request.POST.get('item_id')))
+        item = Listing.objects.get(pk=int(request.POST.get('item_id')))
 
         if int(request.POST.get('found')):
-            instance = Watchlist.objects.get(who=watch_who, item=watch_item)
+            instance = Watchlist.objects.get(who=user, item=item)
             instance.delete()
         else:
-            instance = Watchlist(who = watch_who) #create an Watchlist object
+            instance = Watchlist(who = user) #create an Watchlist object
             instance.save() # save instance first and then relate to the Listing object
-            instance.item.add(watch_item)
+            instance.item.add(item)
 
-    watched_items = list(Watchlist.objects.filter(who=watch_who).values_list('item', flat=True)) #use values_list with flat to get the item.id only instead of a dictionary 
-    items = Listing.objects.filter(pk__in= watched_items) #get listing objects by index, pk__in takes id in int format
+    # watched_items = list(Watchlist.objects.filter(who=watch_who).values_list('item', flat=True)) #use values_list with flat to get the item.id only instead of a dictionary 
+    # items = Listing.objects.filter(pk__in= watched_items) #get listing objects by index, pk__in takes id in int format
+    key = "watch"
+    items = make_list(key, user=user)
+
     return render(request, "auctions/watchlist.html", {
         "items": items,
     })
 
 def item(request, id):
     item = Listing.objects.get(pk = id)
-    user = User.objects.get(pk=request.user.id)
-    exist = Watchlist.objects.filter(who=request.user.id, item=item.id).count()
+    now=datetime.datetime.now()
+    try:
+        user = User.objects.get(pk=request.user.id)
+    except User.DoesNotExist:
+        user = None
+        exist = 0
+    else:
+        exist = Watchlist.objects.filter(who=user, item=item)
 
     #save comment into db
     if request.method == 'POST':
-        detail = request.POST.get('detail')
-        instance = Comment(item = item, user=user, detail=detail, time=datetime.datetime.now())
-        instance.save()
+        # check if the user logged in yet
+        if not user:
+            message = "Please login"
+            return HttpResponseRedirect(reverse("login", args=(message,)))
 
+        # check if it's a comment
+        if request.POST.get('detail'):
+            detail = request.POST.get('detail')
+            instance = Comment(item = item, user=user, detail=detail, time=now)
+            instance.save()
+
+        # check if it's a bid
+        if request.POST.get('bid'):
+            price = request.POST.get('bid')
+            instance = Bid(user=user, item=item, price=price, time=now)
+            instance.save()
+    
+    current_price = Bid.objects.filter(item=item).latest().price
     comments = list(Comment.objects.filter(item=item))
 
     return render(request, "auctions/item.html", {
         'item': item,
         'exist': exist,
-        'comments': comments
+        'comments': comments,
+        'price': current_price
     })
+
+def make_list(key, cate_id=0, user=None):
+    """get user, category and return a list which fulfill the request
+
+    Args:
+        user ([User]): get current logged in user info, or None type, i.e. not logged in
+        cate_id ([int], optional): category filter. Defaults to 0.
+        watchlist ([Boolean], optional): watchlist filter. Defaults to False.
+
+    """
+    show_list = {}
+
+    #for cate_name.html
+    if key == 'cate':
+        items = list(Listing.objects.filter(category = cate_id))
+    
+    #for watchlist.html
+    elif key == 'watch':
+        watched_items = list(Watchlist.objects.filter(who=user).values_list('item', flat=True)) #use values_list with flat to get the item.id only instead of a dictionary 
+        items =Listing.objects.filter(pk__in= watched_items) #get listing objects by index, pk__in takes id in int format
+
+    #for index.html
+    elif key == 'index': 
+        items = Listing.objects.all().filter(avail=1)
+    
+    # wrap bid in
+    for item in items:
+        price = Bid.objects.filter(item=item).latest().price #get max price for each item
+        show_list[item] = price
+    
+    return show_list
