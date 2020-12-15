@@ -18,7 +18,7 @@
                 document.querySelector('form').onsubmit = () => {
                     const task = document.querySelector('#task').value;
                     // console.log(task);
-                    
+
                     const li = document.createElement('li');
                     li.innerHTML = task;
 
@@ -27,8 +27,9 @@
                     // clear input field
                     document.querySelector('#task').value = '';
                     document.querySelector('#submit').disabled = true;
-                    
+
                     //stop form from submitting (do everything in the client side, i.e. in the brower)
+                    // do NOT reload the page after submitting, default is autosubmitting
                     return false;
                 }
             });

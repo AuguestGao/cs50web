@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
-  // document.querySelector('#compose-form').addEventListener('submit', send_email);
 
   // By default, load the inbox
   load_mailbox('inbox');
@@ -20,6 +19,30 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+  
+  document.querySelector('#compose-form').onsubmit = (event) => {
+    
+    // prevent auto-reloading (not show console.log and reload to index page)
+    event.preventDefault();
+
+    //send email
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+        recipients: document.querySelector('#compose-recipients').value,
+        subject: document.querySelector('#compose-subject').value,
+        body: document.querySelector('#compose-body').value
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+      // print result
+      console.log(result);
+    });
+
+    load_mailbox('sent');
+  };
+
 }
 
 function load_mailbox(mailbox) {
@@ -30,29 +53,4 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-}
-
-function send_email(event) {
-
-    // trial line
-
-    // const sub = document.querySelector('#compose-subject').value;
-    event.preventDefault();
-    console.log('sub');
-
-    // //send email
-    // fetch('/emails', {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     recipients: document.querySelector('#compose-recipients').value,
-    //     subject: document.querySelector('#compose-subject').value,
-    //     body: document.querySelector('#compose-body').value
-    //   })
-    // })
-    // .then(response => response.json())
-    // .then(result => {
-    //   // print result
-    //   console.log(result);
-    // });
-
 }
