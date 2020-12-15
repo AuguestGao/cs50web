@@ -6,7 +6,7 @@
             document.addEventListener('DOMContentLoaded', function() {
 
                 document.querySelector('form').onsubmit = function() {
-                    
+
                     //Asynchronous process, send a request and get http reposnse, a promise, may take a while
                     fetch('https://api.exchangeratesapi.io/latest?base=USD')
 
@@ -15,8 +15,8 @@
                         return response.json()
                     })
                     // short hand way of above 3 lines is
-
                     //.then(response => response.json())
+
                     .then(data => {
                         const currency = document.querySelector('#currency').value.toUpperCase(); // take the user's input and convert it to uppercase
                         //const rate = data.rates.EUR;
