@@ -38,11 +38,13 @@ function compose_email() {
     .then(result => {
       // print result
       console.log(result);
+    })
+    .catch(error => {
+      console.log('Error', error);
     });
 
     load_mailbox('sent');
   };
-
 }
 
 function load_mailbox(mailbox) {
