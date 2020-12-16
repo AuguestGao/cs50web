@@ -66,7 +66,16 @@ function load_mailbox(mailbox) {
     emails.forEach(email => {
       //console.log(email.subject);
       const element = document.createElement('div');
+
+      // set border and background accordingly
       element.setAttribute('id', 'border');
+      
+      if (email.read === true) {
+        element.setAttribute('id', 'read');
+      } else {
+        element.setAttribute('id', 'unread');
+      }
+      
       element.innerHTML = `<p><strong>${email.sender}</strong> | ${email.subject} <span style='float:right'>${email.timestamp}</span><p>`;
       document.querySelector('#summary').append(element);
       element.addEventListener('click', () => {

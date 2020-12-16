@@ -6,5 +6,12 @@ textarea {
     border: 1px solid#343232;
     height: 30px;
     padding: 1px;
-    background-color: #a8a4a4;
+}
+
+#unread {
+    background-color: greenyellow;
+}
+
+#read {
+    background-color: whitesmoke;
 }
