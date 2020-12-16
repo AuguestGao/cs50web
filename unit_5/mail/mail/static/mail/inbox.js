@@ -56,8 +56,8 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
-  // empty summary div everytime change a mail
-  document.querySelector('#summary').innerHTML = '';
+  // empty show div everytime change a mail
+  document.querySelector('#show').innerHTML = '';
 
   fetch('/emails/'+mailbox)
   .then(response => response.json())
@@ -66,23 +66,38 @@ function load_mailbox(mailbox) {
     emails.forEach(email => {
       //console.log(email.subject);
       const element = document.createElement('div');
-
+      
       // set border and background accordingly
-      element.setAttribute('id', 'border');
+      element.setAttribute('class', 'div-border');
       
       if (email.read === true) {
         element.setAttribute('id', 'read');
       } else {
         element.setAttribute('id', 'unread');
       }
-      
+      console.log(email.id);
       element.innerHTML = `<p><strong>${email.sender}</strong> | ${email.subject} <span style='float:right'>${email.timestamp}</span><p>`;
-      document.querySelector('#summary').append(element);
+      document.querySelector('#show').append(element);
       element.addEventListener('click', () => {
-        console.log(email.id + "is clicked");
+        //console.log(email.id + "is clicked");
+        view_email(email.id);
       });
     });
   });
   
 }
 
+function view_email(id) {
+  fetch('/emails/'+id)
+  .then(response => response.json())
+  .then(email =>{
+    const element = document.createElement('div');
+    element.innerHTML = `<p><strong>From:</strong> ${email.sender}</p> <p><strong>To:</strong> ${email.recipients}</p> <p><strong>Subject:</strong> ${email.subject}</p> <p><strong>Timestamp:</strong> ${email.timestamp}</p>`;
+    document.querySelector('#show').append(element);
+
+    // reply button
+    const reply = document.createElement('button');
+    element.setAttribute('class', 'btn btn-outline-primary');
+    document.querySelector('#show').append(reply);
+  })
+}
