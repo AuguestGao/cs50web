@@ -8,10 +8,14 @@ textarea {
     padding: 1px;
 }
 
-#unread {
-    background-color:whitesmoke;
+#read {
+    background-color: white;
 }
 
-#read {
-    background-color: grey;
+#unread {
+    background-color:limegreen;
+}
+
+#selection {
+    background-color: orange;
 }
