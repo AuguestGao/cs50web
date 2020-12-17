@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function compose_email() {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#show').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -51,6 +52,7 @@ function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#show').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
   
   // Show the mailbox name
@@ -69,9 +71,9 @@ function load_mailbox(mailbox) {
       
       // set border and background accordingly     
       if (email.read === true ) {
-        element.setAttribute('class', 'read, div-border');
+        element.setAttribute('class', 'read div-border');
       } else {
-        element.setAttribute('class', 'unread, div-border');
+        element.setAttribute('class', 'unread div-border');
       }
 
       element.setAttribute('id', 'id'+email.id);
@@ -101,6 +103,9 @@ function view_email(id, mailbox) {
   fetch('/emails/'+id)
   .then(response => response.json())
   .then(email =>{
+    
+    // automatically change to read
+    toggle_status(id, 'read', true);
 
     const element = document.createElement('div');
     element.innerHTML = `<p><strong>From:</strong> ${email.sender}</p> <p><strong>To:</strong> ${email.recipients}</p> <p><strong>Subject:</strong> ${email.subject}</p> <p><strong>Timestamp:</strong> ${email.timestamp}</p>`;
@@ -123,8 +128,11 @@ function view_email(id, mailbox) {
       bt_arc.name = 'archive';
     }
     
-    // automatically change to read
-    toggle_status(id, 'read', true);
+    const bt_unread = document.createElement('submit');
+    bt_unread.setAttribute('class','btn btn-outline-success');
+    bt_unread.textContent = "Mark as Unread";
+    bt_unread.value = false;
+    bt_unread.name = 'read';
 
     bt_reply.onclick = () => {
       console.log('replying'+email.id);
@@ -136,14 +144,22 @@ function view_email(id, mailbox) {
       load_mailbox('inbox');
     };
 
+    bt_unread.onclick = () => {
+      toggle_status(id, bt_unread.name, bt_unread.value);
+      load_mailbox('inbox');
+    };
+
     //add div, reply button nd line break
     //if it's from 'sent' page, ignore bt_arc
     if (mailbox != 'sent') {
-      document.querySelector('#show').append(element, bt_reply, bt_arc, document.createElement('hr'), email.body);
+      if (mailbox != 'archive') {
+        document.querySelector('#show').append(element, bt_reply, bt_arc, bt_unread, document.createElement('hr'), email.body);
+      } else {
+        document.querySelector('#show').append(element, bt_reply, bt_arc, document.createElement('hr'), email.body);
+      }
     } else {
       document.querySelector('#show').append(element, bt_reply, document.createElement('hr'), email.body);
     }
-
   });
 }
 
@@ -157,11 +173,11 @@ function toggle_status(id, name, status) {
     //console.log('change archive');
   } else {
     change = {read: status};
-    //console.log('change read');
+    //console.log('change read to' +status);
   }
 
   fetch(url, {
     method: 'PUT',
     body: JSON.stringify(change)
-  })
+  });
 }
