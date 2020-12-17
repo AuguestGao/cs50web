@@ -19,3 +19,11 @@ textarea {
 #selection {
     background-color: orange;
 }
+
+pre {
+    font-family: Arial;
+    font-size: medium;
+    /* allow pre tag to wrap words */
+    white-space: pre-wrap;
+
+}
