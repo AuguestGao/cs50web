@@ -10,16 +10,23 @@ document.addEventListener('DOMContentLoaded', function() {
   load_mailbox('inbox');
 });
 
-function compose_email() {
+function compose_email(args={}) {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#show').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
-  document.querySelector('#compose-recipients').value = '';
-  document.querySelector('#compose-subject').value = '';
-  document.querySelector('#compose-body').value = '';
+  // check if args has content
+  if (Object.keys(args).length == 0) {
+    document.querySelector('#compose-recipients').value = '';
+    document.querySelector('#compose-subject').value = '';
+    document.querySelector('#compose-body').value = '';
+  } else {
+    document.querySelector('#compose-recipients').value = args.recipient;
+    document.querySelector('#compose-subject').value = args.subject;
+    document.querySelector('#compose-body').value = args.body;
+  }
   
   document.querySelector('#compose-form').onsubmit = (event) => {
     
@@ -95,7 +102,6 @@ function load_mailbox(mailbox) {
 
     });
   });
-  
 }
 
 function view_email(id, mailbox) {
@@ -135,7 +141,13 @@ function view_email(id, mailbox) {
     bt_unread.name = 'read';
 
     bt_reply.onclick = () => {
-      console.log('replying'+email.id);
+      console.log("sent from: "+email.sender);
+      var args ={
+        recipient: email.sender,
+        subject: "Re: " + email.subject,
+        body: "\n\n" + "On " + email.timestamp + "\n" + email.sender + " wrote:\n" + email.body
+      };
+      compose_email(args);
     };
 
     //when bt_arc (archive button" is clicked), set archive status thru toggle_status function and load archive mailbox
@@ -149,16 +161,19 @@ function view_email(id, mailbox) {
       load_mailbox('inbox');
     };
 
+    const email_body = document.createElement('pre');
+    email_body.innerHTML = `${email.body}`;
+  
     //add div, reply button nd line break
     //if it's from 'sent' page, ignore bt_arc
     if (mailbox != 'sent') {
       if (mailbox != 'archive') {
-        document.querySelector('#show').append(element, bt_reply, bt_arc, bt_unread, document.createElement('hr'), email.body);
+        document.querySelector('#show').append(element, bt_reply, bt_arc, bt_unread, document.createElement('hr'), email_body);
       } else {
-        document.querySelector('#show').append(element, bt_reply, bt_arc, document.createElement('hr'), email.body);
+        document.querySelector('#show').append(element, bt_reply, bt_arc, document.createElement('hr'), email_body);
       }
     } else {
-      document.querySelector('#show').append(element, bt_reply, document.createElement('hr'), email.body);
+      document.querySelector('#show').append(element, bt_reply, document.createElement('hr'), email_body);
     }
   });
 }
