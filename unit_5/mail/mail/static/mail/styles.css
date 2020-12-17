@@ -8,11 +8,11 @@ textarea {
     padding: 1px;
 }
 
-#read {
+.read {
     background-color: white;
 }
 
-#unread {
+.unread {
     background-color:limegreen;
 }
 
