@@ -4,7 +4,7 @@
 {% block body %}
     <h2>{{ request.user.email }}</h2>
 
-    <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
+    <!-- <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
     <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
     <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
     <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
@@ -31,7 +31,68 @@
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
             <input type="submit" class="btn btn-primary" value='Send'/>
         </form>
-    </div>
+    </div> -->
+
+    <!-- seperating line -->
+    <!-- nav section -->
+    <div id='nav'/>
+    <script type='text/babel'>
+
+        class Nav extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" value="inbox" onClick={this.gotoMailbox}>Inbox</button>
+                        <h1 id='a'>Inbox</h1>
+                        <button class="btn btn-sm btn-outline-primary" value="compose" onClick={this.gotoMailbox}>Compose</button>
+                        <button class="btn btn-sm btn-outline-primary" value="sent" onClick={this.gotoMailbox}>Sent</button>
+                        <button class="btn btn-sm btn-outline-primary" value="archived" onClick={this.gotoMailbox}>Archived</button>
+                        <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
+                        <hr/>
+                    </div>
+                );
+            }
+
+            gotoMailbox = (event) => {
+                if (event.target.value === "inbox") {
+                        document.querySelector('body').style.backgroundColor='lightblue';
+                        <h1>inbox</h1>
+                    } else if (event.target.value === "compose") {
+                        document.querySelector('body').style.backgroundColor='yellow';
+                } else {
+                    document.querySelector('body').style.backgroundColor='whitesmoke';
+                }
+            }
+        }
+        
+        ReactDOM.render(<Nav />, document.querySelector('#nav'));
+    </script>
+
+
+    <div id="app"/>
+    <script type='text/babel'>
+
+        class App extends React.Component {
+            
+            constructor(props) {
+                super(props);
+                this.state = {
+                    mailbox:'',
+                };
+            }
+            
+            render() {
+                return (
+                    <div id='emails-view'>
+                        <h2>Emails view</h2>
+                    </div> 
+                );
+                }
+        }
+
+
+        ReactDOM.render(<App />, document.querySelector('#app'));
+    </script>
 {% endblock %}
 
 {% block script %}
