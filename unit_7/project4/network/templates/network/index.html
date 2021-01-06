@@ -1,0 +1,53 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div id="posts"/>
+    <script type="text/babel">
+
+        class Posts extends React.Component {
+            render() {
+                return (
+                    <div class="container container-mid">
+                        <h1>All Posts</h1>
+                        <div>
+                            <New/>
+                        </div>
+                    </div>    
+                );
+            }
+        }
+
+
+
+        class New extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                
+
+                }
+            }
+
+            render() {
+                const {content} = this.state
+                return (
+                    <div class='container'>
+                        <label for="newpost"><h3>New Post</h3></label>
+                        <textarea class="form-control" placeholder="What's in your mind?" id="newpost" rows="3"></textarea>
+                        <button type='button' class="btn btn-primary btn-sm" id='newbtn' onClick ={postNew}>Post</button>
+                    </div>
+                );
+            }
+
+            postNew = () => {
+
+            }
+
+        }
+
+
+
+        ReactDOM.render(<Posts />, document.querySelector('#posts'));
+    </script>
+{% endblock %}
